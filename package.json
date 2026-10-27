@@ -1,0 +1,14 @@
+{
+  "name": "taskforge",
+  "version": "1.0.0",
+  "description": "TaskForge – full-stack task management (Express + SQLite + vanilla JS)",
+  "main": "server.js",
+  "scripts": { "start": "node server.js", "dev": "node --watch server.js" },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^11.3.0",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "engines": { "node": ">=18" }
+}

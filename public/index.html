@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TaskForge – Task Management</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#09090b;--side:#0f0f12;--card:#151519;--card2:#1b1b20;--line:#26262d;--tx:#f4f4f5;--mut:#8b8b96;--red:#e11d2e;--red2:#ff4757;--redbg:rgba(225,29,46,.14);--ok:#35c28a;--warn:#f0a63a;--blue:#5b9dff;box-sizing:border-box}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{font-family:Manrope,system-ui,sans-serif;background:var(--bg);color:var(--tx);font-size:14px;display:flex;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+:focus-visible{outline:2px solid var(--red2);outline-offset:2px}
+aside{width:244px;background:var(--side);border-right:1px solid var(--line);padding:18px 14px;display:flex;flex-direction:column;gap:4px;overflow-y:auto;flex:none}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;padding:4px 8px 18px}
+.logo i{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--red2),#8f0f1b);display:grid;place-items:center;font-style:normal;font-size:15px}
+.nav{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;color:var(--mut);font-weight:600;width:100%;text-align:left}
+.nav:hover{background:var(--card);color:var(--tx)}
+.nav.on{background:var(--red);color:#fff;box-shadow:0 6px 20px -8px var(--red)}
+.nav .n{margin-left:auto;font-size:11px;background:var(--card2);color:var(--mut);padding:2px 7px;border-radius:20px}
+.nav.on .n{background:rgba(0,0,0,.25);color:#fff}
+.sec{color:var(--mut);font-size:12px;font-weight:600;padding:18px 12px 6px}
+.dot{width:9px;height:9px;border-radius:50%;flex:none}
+main{flex:1;min-width:0;overflow-y:auto;padding:0 28px 40px}
+.top{display:flex;gap:12px;align-items:center;padding:16px 0;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5}
+.search{flex:1;max-width:340px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 12px;width:100%}
+.sp{flex:1}
+.btn{padding:9px 16px;border-radius:10px;font-weight:700;background:var(--card);border:1px solid var(--line);white-space:nowrap}
+.btn:hover{border-color:#3a3a44}
+.btn.red{background:var(--red);border-color:var(--red);color:#fff}
+.btn.red:hover{background:var(--red2)}
+.av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#ff4757,#5b0e16);display:grid;place-items:center;font-weight:800;font-size:12px;border:2px solid var(--bg);flex:none}
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin:24px 0 18px}
+h1{font-size:26px;font-weight:800;letter-spacing:-.5px}
+.sub{color:var(--mut);margin-top:4px}
+.grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px}
+.card h3{font-size:15px;font-weight:700;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.stat{border-radius:14px;padding:16px;background:var(--card2);border:1px solid var(--line);position:relative;overflow:hidden}
+.stat.hot{background:linear-gradient(145deg,#c4111f,#4a0910);border-color:#7d1019}
+.stat b{display:block;font-size:34px;font-weight:800;margin:8px 0 2px;letter-spacing:-1px}
+.stat span{color:var(--mut);font-size:12px}.stat.hot span{color:#ffd0d4}
+.tag{font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;background:var(--redbg);color:var(--red2);margin-left:6px}
+.stat.hot .tag{background:rgba(0,0,0,.3);color:#fff}
+.col{display:flex;flex-direction:column;gap:16px}
+.wl{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.wl div{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--card2)}
+.wl small{color:var(--mut);display:block;margin-bottom:6px}
+.bars{display:flex;gap:3px;height:22px;margin-top:8px}.bars i{flex:1;border-radius:2px;background:#2a2a31}.bars i.f{background:var(--red)}.bars.g i.f{background:var(--ok)}
+.timer{text-align:center;padding:8px 0}
+.clock{font-size:46px;font-weight:800;letter-spacing:-1px;font-variant-numeric:tabular-nums;margin:10px 0 14px}.clock span{color:var(--red2)}
+.row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+select,.inp{background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:9px 10px;width:100%}
+select option{background:#151519}
+.prev{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-top:1px solid var(--line);font-size:13px}
+.prev small{color:var(--mut)}
+.tl{position:relative;height:210px;overflow:hidden}
+.tl .hrs{display:flex;justify-content:space-between;color:var(--mut);font-size:11px;margin-bottom:8px}
+.tl .ln{position:absolute;top:24px;bottom:0;width:0;border-left:1px dashed var(--line)}
+.tl .now{border-left:2px solid var(--red);}
+.tl .it{position:absolute;padding:6px 10px;border-radius:9px;font-size:12px;font-weight:600;white-space:nowrap;background:var(--redbg);border:1px solid #5a1a20;max-width:60%;overflow:hidden;text-overflow:ellipsis}
+.tbl{width:100%;border-collapse:collapse;min-width:720px}
+.tbl th{color:var(--mut);font-weight:600;text-align:left;padding:10px 8px;font-size:12px;border-bottom:1px solid var(--line)}
+.tbl td{padding:12px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
+.tbl tr:hover td{background:#18181d}
+.tbl .t{font-weight:600}.done .t{text-decoration:line-through;color:var(--mut)}
+.wrap{overflow-x:auto}
+.chk{appearance:none;width:18px;height:18px;border:2px solid #3a3a44;border-radius:5px;cursor:pointer;display:grid;place-items:center}.chk:checked{background:var(--red);border-color:var(--red)}.chk:checked::after{content:"✓";font-size:12px;color:#fff}
+.pill{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;border:0}
+.p-High{background:var(--redbg);color:var(--red2)}.p-Medium{background:rgba(240,166,58,.14);color:var(--warn)}.p-Low{background:rgba(91,157,255,.14);color:var(--blue)}
+.s-Todo{color:var(--mut)}.s-In-Progress{color:var(--warn)}.s-In-Review{color:var(--blue)}.s-Done{color:var(--ok)}
+.pill.s{background:var(--card2);cursor:pointer}.pill.s::before{content:"● ";font-size:9px}
+.ico{padding:6px 8px;border-radius:8px;color:var(--mut)}.ico:hover{background:var(--card2);color:var(--red2)}
+.board{display:grid;grid-template-columns:repeat(4,minmax(220px,1fr));gap:14px;overflow-x:auto}
+.lane{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;min-height:300px}
+.lane h4{display:flex;justify-content:space-between;margin-bottom:12px;font-size:14px}
+.lane.over{border-color:var(--red)}
+.kc{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px;cursor:grab}
+.kc:hover{border-color:#4a1218}.kc p{font-weight:600;margin-bottom:8px}.kc div{display:flex;justify-content:space-between;align-items:center;color:var(--mut);font-size:12px}
+.empty{text-align:center;color:var(--mut);padding:26px 10px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;place-items:center;z-index:20;padding:16px}
+.modal.on{display:grid}
+.mbox{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;width:100%;max-width:460px;display:grid;gap:12px}
+.mbox label{display:grid;gap:5px;color:var(--mut);font-size:12px;font-weight:600}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.toast{position:fixed;bottom:calc(20px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:var(--red);padding:10px 18px;border-radius:10px;font-weight:700;opacity:0;pointer-events:none;transition:opacity .2s;z-index:30}
+.toast.on{opacity:1}
+.menu{display:none}
+@media(max-width:980px){.grid{grid-template-columns:1fr}}
+@media(max-width:760px){aside{position:fixed;inset:0 auto 0 0;z-index:15;transform:translateX(-100%);transition:transform .2s}aside.open{transform:none}.menu{display:block}main{padding:0 14px 40px}.stats,.wl{grid-template-columns:1fr 1fr}.two{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<aside id="side">
+  <div class="logo"><i>⚒</i>TaskForge</div>
+  <button class="nav on" data-v="dash">▦ Dashboard</button>
+  <button class="nav" data-v="tasks">☑ My Tasks <span class="n" id="nTasks">0</span></button>
+  <button class="nav" data-v="board">▥ Board</button>
+  <div class="sec">Projects</div>
+  <div id="projs"></div>
+  <div class="sec">Team</div>
+  <button class="nav" data-team="Product Team"><span class="dot" style="background:#a78bfa"></span>Product Team</button>
+  <button class="nav" data-team="Design Team"><span class="dot" style="background:#5b9dff"></span>Design Team</button>
+  <button class="nav" data-team=""><span class="dot" style="background:#8b8b96"></span>All Teams</button>
+  <div class="sp"></div>
+  <button class="nav" id="resetBtn">↺ Reset demo data</button>
+</aside>
+<main>
+  <div class="top">
+    <button class="btn menu" id="menuBtn" aria-label="Menu">☰</button>
+    <input class="search" id="q" placeholder="Search tasks…" aria-label="Search tasks">
+    <div class="sp"></div>
+    <button class="btn red" id="addTop">+ Add task</button>
+    <button class="av" id="avBtn" title="Log out" aria-label="Log out">?</button>
+  </div>
+
+  <section id="v-dash">
+    <div class="head"><div><h1>Dashboard</h1><p class="sub">Tracking ongoing activities and performance trends</p></div></div>
+    <div class="grid">
+      <div class="col">
+        <div class="stats" id="stats"></div>
+        <div class="card"><h3>Today’s timeline <span class="sub" id="todayLbl"></span></h3><div class="tl" id="tl"></div></div>
+      </div>
+      <div class="col">
+        <div class="card"><h3>Workload by status</h3><div class="wl" id="wl"></div></div>
+        <div class="card"><h3>Time tracker</h3>
+          <select id="tSel" aria-label="Task to track"></select>
+          <div class="timer"><div class="clock" id="clock">00:00:<span>00</span></div>
+            <div class="row"><button class="btn red" id="tGo">▶ Start</button><button class="btn" id="tStop">■ Stop</button></div></div>
+          <div id="prev"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="v-tasks" hidden>
+    <div class="head"><div><h1 id="tTitle">My Tasks</h1><p class="sub">Search, filter and update everything in one place</p></div>
+      <div class="row"><select id="fTeam" aria-label="Team" style="width:auto"><option value="">All teams</option><option>Product Team</option><option>Design Team</option></select>
+      <select id="fStat" aria-label="Status" style="width:auto"><option value="">All status</option><option>Todo</option><option>In Progress</option><option>In Review</option><option>Done</option></select></div></div>
+    <div class="card wrap" id="list"></div>
+  </section>
+
+  <section id="v-board" hidden>
+    <div class="head"><div><h1>Board</h1><p class="sub">Drag cards between columns to change status</p></div></div>
+    <div class="board" id="boardEl"></div>
+  </section>
+</main>
+
+<div class="modal" id="modal"><form class="mbox" id="form" onsubmit="return false">
+  <h3 id="mTitle" style="font-size:18px">New task</h3>
+  <label>Task name<input class="inp" id="fName" required maxlength="80" placeholder="e.g. Design onboarding flow"></label>
+  <div class="two">
+    <label>Priority<select id="fPri"><option>High</option><option selected>Medium</option><option>Low</option></select></label>
+    <label>Status<select id="fSt"><option>Todo</option><option>In Progress</option><option>In Review</option><option>Done</option></select></label>
+    <label>Project<select id="fProj"></select></label>
+    <label>Team<select id="fTm"><option>Product Team</option><option>Design Team</option></select></label>
+    <label>Due date<input class="inp" type="date" id="fDue" required></label>
+    <label>Start time (timeline)<input class="inp" type="time" id="fTime"></label>
+  </div>
+  <label>Assigned to<input class="inp" id="fWho" placeholder="Names, comma separated" value="Aria, Noah"></label>
+  <div class="row" style="justify-content:flex-end"><button class="btn" id="mCancel" type="button">Cancel</button><button class="btn red" id="mSave" type="submit">Save task</button></div>
+</form></div>
+<div class="modal on" id="auth"><form class="mbox" id="authForm">
+  <div class="logo" style="padding:0 0 4px"><i>⚒</i>TaskForge</div>
+  <h3 id="aTitle" style="font-size:18px">Log in to your workspace</h3>
+  <label id="aNameL" hidden>Name<input class="inp" id="aName" autocomplete="name"></label>
+  <label>Email<input class="inp" id="aEmail" type="email" required autocomplete="email"></label>
+  <label>Password<input class="inp" id="aPass" type="password" required minlength="6" autocomplete="current-password"></label>
+  <p id="aErr" style="color:var(--red2);font-weight:600;min-height:18px"></p>
+  <button class="btn red" id="aGo" type="submit">Log in</button>
+  <button class="btn" id="aSwap" type="button">Create a new account</button>
+</form></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const KEY='cinder.v1',PROJ=[['Product Management','#16c4c4'],['Project Management','#a78bfa'],['Real Estate Website','#ff7a45']];
+const iso=d=>{const x=new Date();x.setDate(x.getDate()+d);return x.toISOString().slice(0,10)};
+let S={tasks:[],logs:[],next:0};
+const api=async(p,m='GET',b)=>{const r=await fetch('/api'+p,{method:m,headers:{'Content-Type':'application/json',Authorization:'Bearer '+(localStorage.getItem('tf_token')||'')},body:b?JSON.stringify(b):undefined});const j=await r.json().catch(()=>({}));if(r.status===401&&!p.startsWith('/auth')){showAuth();throw new Error('Please log in')}if(!r.ok)throw new Error(j.error||'Request failed');return j};
+const save=()=>{};
+let view='dash',projF='',teamF='',editId=null,tm={on:false,sec:0,iv:null};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const today=iso(0),isOver=t=>t.st!=='Done'&&t.due<today;
+const fmtD=d=>{const[y,m,x]=d.split('-');return`${x}/${m}/${y}`};
+const ini=n=>n.trim().slice(0,1).toUpperCase();
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('on'),1800)}
+function vis(){const q=$('#q').value.toLowerCase(),ft=$('#fTeam').value,fs=$('#fStat').value;
+ return S.tasks.filter(t=>(!projF||t.proj===projF)&&(!(teamF||ft)||t.team===(teamF||ft))&&(!fs||t.st===fs)&&(!q||(t.name+t.who+t.proj).toLowerCase().includes(q)))}
+function render(){
+ $('#nTasks').textContent=S.tasks.filter(t=>t.st!=='Done').length;
+ $('#projs').innerHTML=PROJ.map(([p,c])=>`<button class="nav ${projF===p?'on':''}" data-proj="${p}"><span class="dot" style="background:${c}"></span>${p}</button>`).join('');
+ $('#fProj').innerHTML=PROJ.map(p=>`<option>${p[0]}</option>`).join('');
+ const T=S.tasks,tot=T.length,done=T.filter(t=>t.st==='Done').length,over=T.filter(isOver).length,open=tot-done;
+ $('#stats').innerHTML=[['Total tasks',tot,'All projects',0],['Overdue',over,'Need attention',1],['Open tasks',open,'Still in motion',0],['Completed',done,'Finished so far',0]]
+  .map(([a,b,c,h])=>`<div class="stat ${h?'hot':''}">${a}<b>${b}</b><span>${c}</span></div>`).join('');
+ const pct=s=>tot?Math.round(T.filter(t=>t.st===s).length/tot*100):0,bar=(p,g)=>`<div class="bars ${g?'g':''}">${Array.from({length:22},(_,i)=>`<i class="${i<Math.round(p/100*22)?'f':''}"></i>`).join('')}</div>`;
+ const wip=pct('In Progress'),dn=pct('Done');
+ $('#wl').innerHTML=`<div><small>Work in progress</small><b style="font-size:22px">${wip}%</b>${bar(wip)}</div><div><small>Completed</small><b style="font-size:22px">${dn}%</b>${bar(dn,1)}</div>`;
+ $('#todayLbl').textContent=new Date().toLocaleDateString(undefined,{weekday:'short',day:'numeric',month:'short'});
+ const sch=T.filter(t=>t.time&&t.st!=='Done'&&t.due===today);const nowH=new Date().getHours()+new Date().getMinutes()/60;
+ const pos=h=>Math.max(0,Math.min(100,(h-7)/9*100));
+ $('#tl').innerHTML=`<div class="hrs">${['7 AM','9 AM','11 AM','1 PM','3 PM'].map(h=>`<span>${h}</span>`).join('')}</div>`+[0,25,50,75,100].map(p=>`<div class="ln" style="left:${p}%"></div>`).join('')+
+  (nowH>=7&&nowH<=16?`<div class="ln now" style="left:${pos(nowH)}%"></div>`:'')+
+  (sch.length?sch.map((t,i)=>{const[h,m]=t.time.split(':');return`<div class="it" style="left:${Math.min(pos(+h+m/60),55)}%;top:${34+i*42}px">${esc(t.name)}</div>`}).join(''):'<div class="empty" style="padding-top:60px">Nothing scheduled today. Add a task due today with a start time.</div>');
+ $('#tSel').innerHTML=T.filter(t=>t.st!=='Done').map(t=>`<option>${esc(t.name)}</option>`).join('');
+ $('#prev').innerHTML=S.logs.length?'<small class="sub">Previous sessions</small>'+S.logs.slice(0,4).map(l=>`<div class="prev"><span>${esc(l.name)}</span><small>${hms(l.sec)}</small></div>`).join(''):'';
+ const L=vis();$('#tTitle').textContent=projF||teamF||'My Tasks';
+ $('#list').innerHTML=L.length?`<table class="tbl"><thead><tr><th></th><th>Task</th><th>Priority</th><th>Project</th><th>Assigned</th><th>Due</th><th>Status</th><th></th></tr></thead><tbody>`+L.map(t=>`<tr class="${t.st==='Done'?'done':''}"><td><input type="checkbox" class="chk" data-c="${t.id}" aria-label="Complete" ${t.st==='Done'?'checked':''}></td><td class="t">${esc(t.name)}</td><td><span class="pill p-${t.pri}">${t.pri}</span></td><td>${esc(t.proj)}</td><td>${t.who.split(',').filter(Boolean).map(w=>`<span class="av" style="display:inline-grid;width:26px;height:26px;margin-right:-8px;font-size:10px" title="${esc(w.trim())}">${ini(w)}</span>`).join('')}</td><td style="${isOver(t)?'color:var(--red2);font-weight:700':''}">${fmtD(t.due)}</td><td><button class="pill s s-${t.st.replace(' ','-')}" data-s="${t.id}" title="Click to advance status">${t.st}</button></td><td style="white-space:nowrap"><button class="ico" data-e="${t.id}" aria-label="Edit">✎</button><button class="ico" data-d="${t.id}" aria-label="Delete">✕</button></td></tr>`).join('')+'</tbody></table>':'<div class="empty">No tasks match. Clear filters or add a new task.</div>';
+ const ST=['Todo','In Progress','In Review','Done'];
+ $('#boardEl').innerHTML=ST.map(s=>`<div class="lane" data-lane="${s}"><h4>${s}<span class="tag">${L.filter(t=>t.st===s).length}</span></h4>${L.filter(t=>t.st===s).map(t=>`<div class="kc" draggable="true" data-k="${t.id}"><p>${esc(t.name)}</p><div><span class="pill p-${t.pri}">${t.pri}</span><span style="${isOver(t)?'color:var(--red2)':''}">${fmtD(t.due)}</span></div></div>`).join('')}</div>`).join('');
+}
+const hms=s=>[Math.floor(s/3600),Math.floor(s%3600/60),s%60].map(n=>String(n).padStart(2,'0')).join(':');
+function tick(){const[h,m,s]=hms(tm.sec).split(':');$('#clock').innerHTML=`${h}:${m}:<span>${s}</span>`}
+$('#tGo').onclick=()=>{if(tm.on){clearInterval(tm.iv);tm.on=false;$('#tGo').textContent='▶ Resume'}else{if(!$('#tSel').value)return toast('Add an open task first');tm.on=true;tm.iv=setInterval(()=>{tm.sec++;tick()},1000);$('#tGo').textContent='❚❚ Pause'}};
+$('#tStop').onclick=()=>{if(!tm.sec)return;clearInterval(tm.iv);const lg={name:$('#tSel').value||'Untitled',sec:tm.sec};S.logs.unshift(lg);api('/logs','POST',lg).catch(e=>toast(e.message));tm={on:false,sec:0};tick();$('#tGo').textContent='▶ Start';render();toast('Time saved')};
+function show(v){view=v;['dash','tasks','board'].forEach(x=>$('#v-'+x).hidden=x!==v);$$('.nav[data-v]').forEach(b=>b.classList.toggle('on',b.dataset.v===v&&!projF&&!teamF));$('#side').classList.remove('open');render()}
+document.addEventListener('click',e=>{const t=e.target.closest('button,input');if(!t)return;const d=t.dataset;
+ if(d.v){projF='';teamF='';show(d.v)}
+ else if(d.proj!==undefined){projF=projF===d.proj?'':d.proj;teamF='';show('tasks')}
+ else if(d.team!==undefined){teamF=d.team;projF='';show('tasks')}
+ else if(d.c){const x=S.tasks.find(k=>k.id==d.c);x.st=t.checked?'Done':'In Progress';api('/tasks/'+x.id,'PUT',x).catch(e=>toast(e.message));render();toast(t.checked?'Task completed':'Task reopened')}
+ else if(d.s){const x=S.tasks.find(k=>k.id==d.s),o=['Todo','In Progress','In Review','Done'];x.st=o[(o.indexOf(x.st)+1)%4];api('/tasks/'+x.id,'PUT',x).catch(e=>toast(e.message));render()}
+ else if(d.e)openM(+d.e);
+ else if(d.d){if(confirm('Delete this task?')){api('/tasks/'+d.d,'DELETE').catch(e=>toast(e.message));S.tasks=S.tasks.filter(k=>k.id!=d.d);render();toast('Task deleted')}}
+});
+let drag=null;
+document.addEventListener('dragstart',e=>{const k=e.target.closest('[data-k]');if(k){drag=+k.dataset.k;e.dataTransfer.setData('text','x')}});
+document.addEventListener('dragover',e=>{const l=e.target.closest('[data-lane]');if(l){e.preventDefault();$$('.lane').forEach(x=>x.classList.toggle('over',x===l))}});
+document.addEventListener('drop',e=>{const l=e.target.closest('[data-lane]');if(l&&drag){const x=S.tasks.find(k=>k.id===drag);x.st=l.dataset.lane;drag=null;api('/tasks/'+x.id,'PUT',x).catch(e=>toast(e.message));render();toast('Moved to '+l.dataset.lane)}});
+function openM(id){editId=id||null;const t=id?S.tasks.find(k=>k.id===id):{name:'',pri:'Medium',st:'Todo',proj:projF||PROJ[0][0],team:teamF||'Product Team',due:iso(3),time:'',who:'Aria, Noah'};
+ $('#mTitle').textContent=id?'Edit task':'New task';$('#mSave').textContent=id?'Save changes':'Add task';
+ $('#fName').value=t.name;$('#fPri').value=t.pri;$('#fSt').value=t.st;$('#fProj').value=t.proj;$('#fTm').value=t.team;$('#fDue').value=t.due;$('#fTime').value=t.time;$('#fWho').value=t.who;
+ $('#modal').classList.add('on');$('#fName').focus()}
+const closeM=()=>$('#modal').classList.remove('on');
+$('#addTop').onclick=()=>openM();$('#mCancel').onclick=closeM;
+$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeM()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeM()});
+$('#form').addEventListener('submit',()=>{const n=$('#fName').value.trim();if(!n||!$('#fDue').value)return;
+ const o={name:n,pri:$('#fPri').value,st:$('#fSt').value,proj:$('#fProj').value,team:$('#fTm').value,due:$('#fDue').value,time:$('#fTime').value,who:$('#fWho').value||'Unassigned'};
+ const was=editId;(was?api('/tasks/'+was,'PUT',o):api('/tasks','POST',o)).then(async()=>{S.tasks=await api('/tasks');closeM();render();toast(was?'Changes saved':'Task added')}).catch(e=>toast(e.message))});
+$('#q').oninput=()=>{if(view==='dash')show('tasks');else render()};
+$('#fTeam').onchange=$('#fStat').onchange=render;
+$('#menuBtn').onclick=()=>$('#side').classList.toggle('open');
+$('#resetBtn').onclick=()=>{if(confirm('Reset all tasks to the demo data?')){api('/reset','POST').then(async()=>{S.tasks=await api('/tasks');S.logs=await api('/logs');projF=teamF='';show('dash');toast('Demo data restored')})}};
+let reg=false;
+function showAuth(){$('#auth').classList.add('on')}
+function setMode(r){reg=r;$('#aNameL').hidden=!r;$('#aTitle').textContent=r?'Create your account':'Log in to your workspace';$('#aGo').textContent=r?'Create account':'Log in';$('#aSwap').textContent=r?'I already have an account':'Create a new account';$('#aErr').textContent=''}
+$('#aSwap').onclick=()=>setMode(!reg);
+$('#authForm').addEventListener('submit',async e=>{e.preventDefault();$('#aErr').textContent='';
+ try{const r=await api(reg?'/auth/register':'/auth/login','POST',{name:$('#aName').value,email:$('#aEmail').value,password:$('#aPass').value});localStorage.setItem('tf_token',r.token);$('#aPass').value='';await boot()}catch(err){$('#aErr').textContent=err.message}});
+$('#avBtn').onclick=()=>{if(confirm('Log out of TaskForge?')){localStorage.removeItem('tf_token');S={tasks:[],logs:[],next:0};render();showAuth()}};
+async function boot(){try{const me=await api('/me');$('#avBtn').textContent=me.user.name.trim().slice(0,2).toUpperCase();$('#avBtn').title='Log out ('+me.user.email+')';const[t,l]=await Promise.all([api('/tasks'),api('/logs')]);S.tasks=t;S.logs=l;$('#auth').classList.remove('on');render()}catch(e){showAuth()}}
+render();boot();
+</script>
+</body>
+</html>
