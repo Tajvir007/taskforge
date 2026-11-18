@@ -7,9 +7,6 @@ pipeline {
         disableConcurrentBuilds()
     }
 
-    environment {
-        IMAGE_NAME = 'taskforge'
-    }
 
     stages {
         stage('Checkout') {
@@ -40,11 +37,7 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
-            steps {
-                sh 'docker build -t taskforge:${BUILD_NUMBER} .'
-            }
-        }
+    
     }
 
     post {
@@ -57,7 +50,7 @@ pipeline {
         }
 
         always {
-            echo "Jenkins build result: ${currentBuild.currentResult}"
+            echo "Jenkins Pipeline execution completed."
         }
     }
 }
