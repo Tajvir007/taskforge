@@ -4,6 +4,7 @@ on:
   workflow_run:
     workflows: ["TaskForge - GitHub Actions CI"]
     types: [completed]
+  push:
     branches: [main, docker]
   workflow_dispatch:
 
