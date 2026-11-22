@@ -18,7 +18,7 @@ COPY --chown=node:node . .
 ENV NODE_ENV=production
 
 # 7. Document the application port
-EXPOSE 3000
+EXPOSE 3010
 
 # 8. Run the application as a non-root user
 USER node
