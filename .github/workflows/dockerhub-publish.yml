@@ -5,6 +5,7 @@ on:
     workflows: ["TaskForge - GitHub Actions CI"]
     types: [completed]
     branches: [main, docker]
+    tags: ['v*']
 
 permissions:
   contents: read
