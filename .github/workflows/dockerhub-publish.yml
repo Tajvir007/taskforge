@@ -35,8 +35,11 @@ jobs:
         with:
           context: .
           push: true
+          # tags: |
+          #   ${{ secrets.DOCKERHUB_USERNAME }}/taskforge:latest
+          #   ${{ secrets.DOCKERHUB_USERNAME }}/taskforge:sha-${{ github.event.workflow_run.head_sha }}
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/taskforge:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/taskforge:sha-${{ github.event.workflow_run.head_sha }}
+            type=raw,value=${{ github.event.workflow_run.head_branch }}
+            type=raw,value=latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
