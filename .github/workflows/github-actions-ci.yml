@@ -4,6 +4,7 @@ name: TaskForge - GitHub Actions CI
 on:
   push:
     branches: [main, docker]
+    tags: ['v*']
 
   pull_request:
     branches: [main]
