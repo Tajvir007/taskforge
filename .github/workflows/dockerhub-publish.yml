@@ -39,7 +39,7 @@ jobs:
           #   ${{ secrets.DOCKERHUB_USERNAME }}/taskforge:latest
           #   ${{ secrets.DOCKERHUB_USERNAME }}/taskforge:sha-${{ github.event.workflow_run.head_sha }}
           tags: |
-            type=raw,value=${{ github.event.workflow_run.head_branch }}
-            type=raw,value=latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/taskforge:${{ github.event.workflow_run.head_branch }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/taskforge:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
