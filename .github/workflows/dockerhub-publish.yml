@@ -1,14 +1,10 @@
+
 name: TaskForge - Docker Publish
 
 on:
   workflow_run:
     workflows: ["TaskForge - GitHub Actions CI"]
     types: [completed]
-  
-  push:
-    branches: [main, docker]
-    tags:
-      - "v*"  
 
 permissions:
   contents: read
@@ -17,38 +13,48 @@ jobs:
   docker-publish:
     name: Build and Push Docker Image
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' && startsWith(github.ref, 'refs/tags/v') }}
+
+    # Publish only after successful CI for a version tag.
+    if: >
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push' &&
+      startsWith(github.event.workflow_run.head_branch, 'v')
 
     steps:
-      # Step 1: Check out the exact commit that passed CI
+      # Step 1: Checkout the exact commit tested by CI
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.workflow_run.head_sha }}
 
-      # Step 2: Set up Docker Buildx
+      # Step 2: Debug the triggering CI run
+      - name: Show release information
+        run: |
+          echo "CI Workflow: ${{ github.event.workflow_run.name }}"
+          echo "CI Conclusion: ${{ github.event.workflow_run.conclusion }}"
+          echo "Original Event: ${{ github.event.workflow_run.event }}"
+          echo "Version Tag: ${{ github.event.workflow_run.head_branch }}"
+          echo "Commit SHA: ${{ github.event.workflow_run.head_sha }}"
+
+      # Step 3: Set up Docker Buildx
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # Step 3: Log in to Docker Hub
+      # Step 4: Login to Docker Hub
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # Step 4: Build and push image
+      # Step 5: Build and Push Docker Image
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v6
         with:
           context: .
           push: true
-          # tags: |
-          #   ${{ secrets.DOCKERHUB_USERNAME }}/taskforge:latest
-          #   ${{ secrets.DOCKERHUB_USERNAME }}/taskforge:sha-${{ github.event.workflow_run.head_sha }}
           tags: |
-           ${{ secrets.DOCKERHUB_USERNAME }}/taskforge:latest  
-           ${{ secrets.DOCKERHUB_USERNAME }}/taskforge:${{ github.ref_type == 'tag' && github.ref_name || format('sha-{0}', github.sha) }}
-            
+            ${{ secrets.DOCKERHUB_USERNAME }}/taskforge:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/taskforge:${{ github.event.workflow_run.head_branch }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
