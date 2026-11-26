@@ -95,7 +95,10 @@ Track all DevOps activities and implementation progress.
 <details>
 <summary>Docker Progress</summary>
 
-**Documentation:** [Docker](docs/docker.md)
+**Documentation:** [Docker](docs/md-files/docker.md)
+
+![GitHub Actions Workflow](docs/pictures/Dockerfile.png)
+![GitHub Actions Workflow](docs/pictures/Docker%20Run.png)
 
 - [ ] Dockerfile
 - [ ] Docker image build
